@@ -4,7 +4,7 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 -->
 <link rel="import" href="../polymer/polymer.html">
-<script src="chartjs/Chart.min.js"></script>
+<script src="chartjs/Chart.js"></script>
 
 /**
  *
@@ -24,7 +24,7 @@ license that can be found in the LICENSE file.
  * @license-url //polymer.github.io/chart-js/components/chart-js/LICENSE
  *
  */
-<polymer-element name="chart-js" attributes="data dataString kind color options">
+<polymer-element name="chart-js" attributes="data dataString kind color height width globalOptions options">
   <template>
     <style>
       :host {
@@ -40,18 +40,32 @@ license that can be found in the LICENSE file.
       kind: '',
       data: null,
       options: null,
+      globalOptions: null,
       color: '#AABBDD',
       dataString: '28,48,40,19,96,27,100',
       enteredView: function() {
-        this.$.chart.width = Math.max(this.offsetWidth, 100);
-        this.$.chart.height = Math.max(this.offsetHeight, 100);
+        this.$.chart.width = this.width;
+        this.$.chart.height = this.height;
+        //this.$.chart.width = Math.max(this.offsetWidth, 100);
+        //this.$.chart.height = Math.max(this.offsetHeight, 100);
         //Get the context of the canvas element we want to select
         this.ctx = this.$.chart.getContext('2d');
         if (!this.kind) {
           this.kind = ['Radar', 'Line', 'Bar'][Math.floor(Math.random()*3)];
-          
+          this.dataStringChanged(); 
         }
-        this.dataStringChanged(); 
+        // console.dir(this.globalOptions);
+        // if (this.globalOptions != null) {
+        //   for (var key in this.globalOptions) {
+
+        //     if (this.globalOptions.hasOwnProperty(key)) {
+        //       console.log(this.globalOptions[key]);
+        //       Chart.defaults.global[key] = this.globalOptions[key];
+        //     }
+        //   }
+        // }
+        Chart.defaults.global.showTooltips = false;
+        Chart.defaults.global.animationSteps = 40;
       },
       hexToRgb: function(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
